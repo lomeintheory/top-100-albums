@@ -1,7 +1,7 @@
 import React from 'react';
 
 const App = () => {
-  return <h1>Hello Upwards</h1>;
+  return <button className='btn btn-primary'>Hello Upwards</button>;
 };
 
 export default App;

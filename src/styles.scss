@@ -1,0 +1,8 @@
+@import 'bootstrap/scss/bootstrap';
+
+$primary-color: #f3cfb3;
+
+.btn-primary {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
