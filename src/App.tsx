@@ -1,7 +1,8 @@
 import React from 'react';
+import AlbumList from './AlbumList';
 
 const App = () => {
-  return <button className='btn btn-primary'>Hello Upwards</button>;
+  return <AlbumList />;
 };
 
 export default App;
