@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import AlbumCard from './AlbumCard';
 import Pagination from './Pagination';
+import AlbumDetailsModal from './AlbumDetailsModal';
 
-interface Album {
+export interface Album {
   title: string;
   artist: string;
   cover: string;
@@ -39,6 +40,7 @@ interface ApiResponse {
 const AlbumList = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
 
   useEffect(() => {
     const fetchAlbums = async (): Promise<void> => {
@@ -69,6 +71,14 @@ const AlbumList = () => {
     setCurrentPage(page);
   };
 
+  const handleAlbumClick = (album: Album) => {
+    setSelectedAlbum(album);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedAlbum(null);
+  };
+
   return (
     <div className='container my-4'>
       <h1 className='text-center mb-4'>Top 100 Albums</h1>
@@ -76,15 +86,22 @@ const AlbumList = () => {
         {paginatedAlbums.map((album, index) => (
           <div className='col-md-3' key={index}>
             <AlbumCard
+              album={album}
               title={album.title}
               artist={album.artist}
               cover={album.cover}
               releaseDate={album.releaseDate}
-              genre={album.genre}
+              onAlbumClick={handleAlbumClick}
             />
           </div>
         ))}
       </div>
+      {selectedAlbum && (
+        <AlbumDetailsModal
+          album={selectedAlbum}
+          onClosePopup={handleClosePopup}
+        />
+      )}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
