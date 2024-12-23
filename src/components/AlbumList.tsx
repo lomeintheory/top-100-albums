@@ -128,14 +128,6 @@ const AlbumList = () => {
     updateUrlParams({ page: page.toString() });
   };
 
-  const handleAlbumClick = (album: Album) => {
-    setSelectedAlbum(album);
-  };
-
-  const handleClosePopup = () => {
-    setSelectedAlbum(null);
-  };
-
   return (
     <div className='container my-4'>
       <h1 className='text-center mb-4'>Top 100 Albums</h1>
@@ -143,21 +135,14 @@ const AlbumList = () => {
       <div className='row'>
         {paginatedAlbums.map((album, index) => (
           <div className='col-md-3' key={index}>
-            <AlbumCard
-              album={album}
-              title={album.title}
-              artist={album.artist}
-              cover={album.cover}
-              releaseDate={album.releaseDate}
-              onAlbumClick={handleAlbumClick}
-            />
+            <AlbumCard album={album} onAlbumClick={setSelectedAlbum} />
           </div>
         ))}
       </div>
       {selectedAlbum && (
         <AlbumDetailsModal
           album={selectedAlbum}
-          onClosePopup={handleClosePopup}
+          onClosePopup={() => setSelectedAlbum(null)}
         />
       )}
       <Pagination

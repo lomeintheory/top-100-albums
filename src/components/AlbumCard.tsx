@@ -3,21 +3,11 @@ import { Album } from './AlbumList';
 
 interface AlbumCardProps {
   album: Album;
-  title: string;
-  artist: string;
-  cover: string;
-  releaseDate: string;
   onAlbumClick: (album: Album) => void;
 }
 
-const AlbumCard: React.FC<AlbumCardProps> = ({
-  album,
-  title,
-  artist,
-  cover,
-  releaseDate,
-  onAlbumClick,
-}) => {
+const AlbumCard: React.FC<AlbumCardProps> = ({ album, onAlbumClick }) => {
+  const { title, artist, cover, releaseDate } = album;
   return (
     <div
       className='album-card'
