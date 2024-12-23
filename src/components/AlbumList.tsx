@@ -24,6 +24,43 @@ interface ApiResponse {
   };
 }
 
+const filterAlbums = (albumList: Album[], term: string, criteria: string) => {
+  if (!term) return albumList;
+  return albumList.filter(album => {
+    const searchValue = album[criteria as keyof Album]?.toLowerCase();
+    return searchValue?.includes(term.toLowerCase());
+  });
+};
+
+const getUrlParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  return {
+    term: searchParams.get('q') || '',
+    criteria: searchParams.get('by') || 'title',
+    page: Number(searchParams.get('page')) || 1,
+  };
+};
+
+const updateUrlParams = (params: {
+  q?: string;
+  by?: string;
+  page?: string;
+}) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      searchParams.set(key, value);
+    }
+  });
+  window.history.pushState(
+    {},
+    '',
+    searchParams.toString()
+      ? `${window.location.pathname}?${searchParams.toString()}`
+      : window.location.pathname,
+  );
+};
+
 const AlbumList = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,10 +68,7 @@ const AlbumList = () => {
   const [filteredAlbums, setFilteredAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const termParam = searchParams.get('q') || '';
-    const criteriaParam = searchParams.get('by') || 'title';
-    const pageParam = Number(searchParams.get('page')) || 1;
+    const { term, criteria, page } = getUrlParams();
 
     // combining fetch and filter so app state is synchronized with URL params on initial load
     const fetchAndFilterAlbums = async (): Promise<void> => {
@@ -51,19 +85,8 @@ const AlbumList = () => {
       }));
 
       setAlbums(albumData);
-
-      if (termParam) {
-        const filtered = albumData.filter(album => {
-          const searchValue =
-            album[criteriaParam as keyof Album]?.toLowerCase();
-          return searchValue?.includes(termParam.toLowerCase());
-        });
-        setFilteredAlbums(filtered);
-      } else {
-        setFilteredAlbums(albumData);
-      }
-
-      setCurrentPage(pageParam);
+      setFilteredAlbums(filterAlbums(albumData, term, criteria));
+      setCurrentPage(page);
     };
 
     fetchAndFilterAlbums();
@@ -72,12 +95,8 @@ const AlbumList = () => {
   // properly updates state when user navigates back and forward in browser
   useEffect(() => {
     const handlePopState = () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const term = searchParams.get('q') || '';
-      const criteria = searchParams.get('by') || 'title';
-      const page = Number(searchParams.get('page')) || 1;
-
-      handleSearch(term, criteria);
+      const { term, criteria, page } = getUrlParams();
+      setFilteredAlbums(filterAlbums(albums, term, criteria));
       setCurrentPage(page);
     };
 
@@ -91,40 +110,22 @@ const AlbumList = () => {
 
   // updates URL query params and album display based on search terms and criteria
   const handleSearch = (searchTerm: string, searchCriteria: string) => {
-    const searchParams = new URLSearchParams();
     if (searchTerm) {
-      searchParams.set('q', searchTerm);
-      searchParams.set('by', searchCriteria);
-      searchParams.set('page', '1');
-      window.history.pushState(
-        {},
-        '',
-        searchParams.toString()
-          ? `${window.location.pathname}?${searchParams.toString()}`
-          : window.location.pathname,
-      );
+      updateUrlParams({
+        q: searchTerm,
+        by: searchCriteria,
+        page: '1',
+      });
     }
 
-    const filtered = albums.filter(album => {
-      const searchValue = album[searchCriteria as keyof Album]?.toLowerCase();
-      return searchValue?.includes(searchTerm.toLowerCase());
-    });
-
-    setFilteredAlbums(filtered);
+    setFilteredAlbums(filterAlbums(albums, searchTerm, searchCriteria));
     setCurrentPage(1);
   };
 
   const handlePageClick = (pageNumber: number) => {
     const page = Math.max(1, Math.min(pageNumber, totalPages));
     setCurrentPage(page);
-
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page.toString());
-    window.history.pushState(
-      {},
-      '',
-      `${window.location.pathname}?${searchParams.toString()}`,
-    );
+    updateUrlParams({ page: page.toString() });
   };
 
   const handleAlbumClick = (album: Album) => {
