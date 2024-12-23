@@ -2,17 +2,58 @@ import React, { useEffect, useState } from 'react';
 import AlbumCard from './AlbumCard';
 import Pagination from './Pagination';
 
+interface Album {
+  title: string;
+  artist: string;
+  cover: string;
+  releaseDate: string;
+  genre: string;
+}
+
+interface ApiResponse {
+  feed: {
+    entry: Array<{
+      'im:name': {
+        label: string;
+      };
+      'im:artist': {
+        label: string;
+      };
+      'im:image': {
+        label: string;
+      }[];
+      'im:releaseDate': {
+        attributes: {
+          label: string;
+        };
+      };
+      category: {
+        attributes: {
+          label: string;
+        };
+      };
+    }>;
+  };
+}
+
 const AlbumList = () => {
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchAlbums = async (): Promise<void> => {
       const response = await fetch(
         'https://itunes.apple.com/us/rss/topalbums/limit=100/json',
       );
-      const data = await response.json();
-      const albumData = data.feed.entry;
+      const data: ApiResponse = await response.json();
+      const albumData = data.feed.entry.map(album => ({
+        title: album['im:name'].label,
+        artist: album['im:artist'].label,
+        cover: album['im:image'][2].label,
+        releaseDate: album['im:releaseDate'].attributes.label,
+        genre: album['category'].attributes.label,
+      }));
+      console.log(data.feed.entry);
       setAlbums(albumData);
     };
 
@@ -35,10 +76,11 @@ const AlbumList = () => {
         {paginatedAlbums.map((album, index) => (
           <div className='col-md-3' key={index}>
             <AlbumCard
-              title={album['im:name']['label']}
-              artist={album['im:artist']['label']}
-              cover={album['im:image'][2]['label']}
-              releaseDate={album['im:releaseDate']['attributes']['label']}
+              title={album.title}
+              artist={album.artist}
+              cover={album.cover}
+              releaseDate={album.releaseDate}
+              genre={album.genre}
             />
           </div>
         ))}
