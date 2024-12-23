@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AlbumCard from './AlbumCard';
 import Pagination from './Pagination';
 import AlbumDetailsModal from './AlbumDetailsModal';
+import SearchBar from './SearchBar';
 
 export interface Album {
   title: string;
@@ -41,6 +42,7 @@ const AlbumList = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
+  const [filteredAlbums, setFilteredAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
     const fetchAlbums = async (): Promise<void> => {
@@ -55,8 +57,8 @@ const AlbumList = () => {
         releaseDate: album['im:releaseDate'].attributes.label,
         genre: album['category'].attributes.label,
       }));
-      console.log(data.feed.entry);
       setAlbums(albumData);
+      setFilteredAlbums(albumData);
     };
 
     fetchAlbums();
@@ -64,7 +66,7 @@ const AlbumList = () => {
 
   const totalPages = Math.ceil(albums.length / 8);
   const startIndex = (currentPage - 1) * 8;
-  const paginatedAlbums = albums.slice(startIndex, startIndex + 8); // current 8 of total albums displayed on each page
+  const paginatedAlbums = filteredAlbums.slice(startIndex, startIndex + 8); // current 8 of total albums displayed on each page
 
   const handlePageClick = (pageNumber: number) => {
     const page = Math.max(1, Math.min(pageNumber, totalPages));
@@ -79,9 +81,26 @@ const AlbumList = () => {
     setSelectedAlbum(null);
   };
 
+  const handleSearch = (searchTerm: string, searchCriteria: string) => {
+    if (!searchTerm.trim()) {
+      setFilteredAlbums(albums);
+      setCurrentPage(1);
+      return;
+    }
+
+    const filtered = albums.filter(album => {
+      const searchValue = album[searchCriteria as keyof Album]?.toLowerCase();
+      return searchValue?.includes(searchTerm.toLowerCase());
+    });
+
+    setFilteredAlbums(filtered);
+    setCurrentPage(1);
+  };
+
   return (
     <div className='container my-4'>
       <h1 className='text-center mb-4'>Top 100 Albums</h1>
+      <SearchBar onSearch={handleSearch} />
       <div className='row'>
         {paginatedAlbums.map((album, index) => (
           <div className='col-md-3' key={index}>
