@@ -39,6 +39,9 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
   onClosePopup,
 }) => {
   const [trackList, setTrackList] = useState<Track[]>([]);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+    null,
+  );
 
   useEffect(() => {
     const loadTrackList = async (): Promise<void> => {
@@ -57,8 +60,21 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
     loadTrackList();
   }, [album]);
 
+  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClosePopup();
+    }
+  };
+
+  const handleAudioPlay = (audio: HTMLAudioElement) => {
+    if (currentAudio && currentAudio !== audio) {
+      currentAudio.pause();
+    }
+    setCurrentAudio(audio);
+  };
+
   return (
-    <div className='modal-overlay'>
+    <div className='modal-overlay' onClick={handleClickOutside}>
       <div className='modal-content'>
         <button className='btn-close' onClick={onClosePopup}></button>
         <img src={album.cover} alt={album.title} className='popup-cover' />
@@ -67,9 +83,22 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
         <p>Release Date: {album.releaseDate}</p>
         <p>Genre: {album.genre}</p>
         <ol className='list-group list-group-numbered'>
-          {trackList.map(track => (
-            <li className='track-item list-group-item' key={track.trackNumber}>
+          {trackList.map((track, index) => (
+            <li
+              className='track-item list-group-item'
+              key={`${track.trackName}-${index}`}>
               <span>{track.trackName}</span>
+              <div className='ms-2 me-auto'>
+                {track.previewUrl && (
+                  <audio
+                    controls
+                    className='mt-2'
+                    onPlay={e => handleAudioPlay(e.currentTarget)}>
+                    <source src={track.previewUrl} type='audio/mpeg' />
+                    Your browser does not support the audio element.
+                  </audio>
+                )}
+              </div>
             </li>
           ))}
         </ol>
