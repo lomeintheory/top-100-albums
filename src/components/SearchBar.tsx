@@ -31,7 +31,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
         />
-        <button className='btn btn-primary' type='submit'>
+        <button
+          className='btn btn-primary'
+          type='submit'
+          disabled={!searchTerm.trim()}>
           Search
         </button>
       </div>
