@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AlbumCard from './AlbumCard';
 import Pagination from './Pagination';
 import AlbumDetailsModal from './AlbumDetailsModal';
-import SearchBar from './SearchBar';
+import Header from './Header';
+import RotatingText from './RotatingText';
 
 export interface Album {
   title: string;
@@ -129,27 +130,31 @@ const AlbumList = () => {
   };
 
   return (
-    <div className='container my-4'>
-      <h1 className='text-center mb-4'>Top 100 Albums</h1>
-      <SearchBar onSearch={handleSearch} />
-      <div className='row'>
-        {paginatedAlbums.map((album, index) => (
-          <div className='col-md-3' key={index}>
-            <AlbumCard album={album} onAlbumClick={setSelectedAlbum} />
-          </div>
-        ))}
-      </div>
-      {selectedAlbum && (
-        <AlbumDetailsModal
-          album={selectedAlbum}
-          onClosePopup={() => setSelectedAlbum(null)}
+    <div className='landing-page'>
+      <Header onSearch={handleSearch} />
+      <section className='rotating-text-section'>
+        <RotatingText />
+      </section>
+      <div className='album-content-section my-4'>
+        <div className='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4'>
+          {paginatedAlbums.map((album, index) => (
+            <div className='col-md-3' key={index}>
+              <AlbumCard album={album} onAlbumClick={setSelectedAlbum} />
+            </div>
+          ))}
+        </div>
+        {selectedAlbum && (
+          <AlbumDetailsModal
+            album={selectedAlbum}
+            onClosePopup={() => setSelectedAlbum(null)}
+          />
+        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageClick={handlePageClick}
         />
-      )}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageClick={handlePageClick}
-      />
+      </div>
     </div>
   );
 };
