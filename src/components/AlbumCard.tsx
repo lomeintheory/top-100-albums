@@ -1,5 +1,5 @@
 import React from 'react';
-import { Album } from './AlbumList';
+import { Album } from './LandingPage';
 
 interface AlbumCardProps {
   album: Album;

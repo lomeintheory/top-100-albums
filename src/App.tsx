@@ -1,8 +1,8 @@
 import React from 'react';
-import AlbumList from './components/AlbumList';
+import LandingPage from './components/LandingPage';
 
 const App = () => {
-  return <AlbumList />;
+  return <LandingPage />;
 };
 
 export default App;
