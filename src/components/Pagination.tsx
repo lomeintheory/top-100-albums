@@ -16,7 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <ul className='pagination'>
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
           <button
-            className='page-link'
+            className='page-link navigation-button'
             onClick={() => onPageClick(currentPage - 1)}>
             Previous
           </button>
@@ -37,7 +37,7 @@ const Pagination: React.FC<PaginationProps> = ({
             currentPage === totalPages ? 'disabled' : ''
           }`}>
           <button
-            className='page-link'
+            className='page-link navigation-button'
             onClick={() => onPageClick(currentPage + 1)}>
             Next
           </button>

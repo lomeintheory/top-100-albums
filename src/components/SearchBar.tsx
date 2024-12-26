@@ -14,7 +14,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <form className='mb-4' onSubmit={handleSubmit}>
+    <form className='search-bar' onSubmit={handleSubmit}>
       <div className='input-group'>
         <select
           className='form-select'

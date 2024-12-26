@@ -7,16 +7,11 @@ interface AlbumCardProps {
 }
 
 const AlbumCard: React.FC<AlbumCardProps> = ({ album, onAlbumClick }) => {
-  const { title, artist, cover, releaseDate } = album;
   return (
-    <div
-      className='album-card'
-      onClick={() => onAlbumClick(album)}
-      style={{ cursor: 'pointer' }}>
-      <img src={cover} alt={title} />
-      <h2>{title}</h2>
-      <p>{artist}</p>
-      <p>{releaseDate}</p>
+    <div className='album-card' onClick={() => onAlbumClick(album)}>
+      <img src={album.cover} alt={album.title} />
+      <h2>{album.title}</h2>
+      <p>{album.artist}</p>
     </div>
   );
 };
