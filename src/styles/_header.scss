@@ -18,12 +18,9 @@
   .header-title {
     font-family: 'Futura';
     font-size: 2rem;
-    font-weight: 1000;
+    font-weight: 900;
     margin: 0;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    height: 100%;
     cursor: pointer;
 
     @media (max-width: 768px) {
@@ -40,7 +37,6 @@
   margin-left: auto;
   margin-right: 2rem;
   max-width: 600px;
-  height: 100%;
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -105,6 +101,5 @@
     border-bottom-right-radius: 25px;
     border-color: #ef8a60;
     background-color: #ef8a60;
-    white-space: nowrap;
   }
 }
