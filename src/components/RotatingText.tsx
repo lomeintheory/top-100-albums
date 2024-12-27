@@ -25,28 +25,30 @@ const RotatingText: React.FC = () => {
   }, [words.length]);
 
   return (
-    <div className='rotating-text'>
-      <p>Find the latest trends in music</p>
-      <p className='words-wrapper'>
-        {words.map((word, index) => (
-          <span
-            key={word}
-            className={`word ${index === currentWordIndex ? 'visible' : ''} ${
-              isAnimating ? 'animating' : ''
-            }`}>
-            {word.split('').map((letter, letterIndex) => (
-              <span
-                key={letterIndex}
-                className='letter'
-                style={{
-                  animationDelay: `${letterIndex * 0.08}s`,
-                }}>
-                {letter === ' ' ? '\u00A0' : letter}
-              </span>
-            ))}
-          </span>
-        ))}
-      </p>
+    <div className='rotating-text-section'>
+      <div className='rotating-text'>
+        <p>Find the latest trends in music</p>
+        <p className='words-wrapper'>
+          {words.map((word, index) => (
+            <span
+              key={word}
+              className={`word ${index === currentWordIndex ? 'visible' : ''} ${
+                isAnimating ? 'animating' : ''
+              }`}>
+              {word.split('').map((letter, letterIndex) => (
+                <span
+                  key={letterIndex}
+                  className='letter'
+                  style={{
+                    animationDelay: `${letterIndex * 0.08}s`,
+                  }}>
+                  {letter === ' ' ? '\u00A0' : letter}
+                </span>
+              ))}
+            </span>
+          ))}
+        </p>
+      </div>
     </div>
   );
 };

@@ -138,9 +138,7 @@ const LandingPage = () => {
   return (
     <div className='landing-page'>
       <Header onSearch={handleSearch} onTitleClick={handleTitleClick} />
-      <section className='rotating-text-section'>
-        <RotatingText />
-      </section>
+      <RotatingText />
       <AlbumList
         albums={paginatedAlbums}
         selectedAlbum={selectedAlbum}
