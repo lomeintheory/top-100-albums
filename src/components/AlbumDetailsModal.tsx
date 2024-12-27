@@ -39,7 +39,6 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
   onClosePopup,
 }) => {
   const [trackList, setTrackList] = useState<Track[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
     null,
   );
@@ -85,7 +84,7 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
         <p>Genre: {album.genre}</p>
         {trackList.length === 0 && (
           <div className='text-center my-3'>
-            No tracks available for this album
+            Sorry...no tracks available for this album...
           </div>
         )}
         <ol className='list-group list-group-numbered'>
