@@ -24,7 +24,7 @@ const AlbumList = ({
   onCloseModal,
 }: AlbumListProps) => {
   return (
-    <div className='album-content-section my-4'>
+    <div className='album-content-section'>
       <div className='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4'>
         {albums.map((album, index) => (
           <div className='col-md-3' key={index}>

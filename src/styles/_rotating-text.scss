@@ -1,0 +1,75 @@
+.rotating-text-section {
+  width: 100%;
+  padding: 4rem 0;
+  margin: 3rem 0 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  position: relative;
+}
+
+.rotating-text {
+  font-size: clamp(1.5rem, 5vw, 5rem);
+  font-weight: 900;
+  color: rgb(79, 77, 77);
+  text-align: center;
+  height: auto;
+  min-height: 7.5rem;
+
+  @media (max-width: 768px) {
+    min-height: 5rem;
+  }
+
+  @media (max-width: 576px) {
+    min-height: 4rem;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  words-wrapper {
+    position: relative;
+    min-height: 2.5rem;
+  }
+  .word {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+
+      .letter {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    &.animating {
+      .letter {
+        animation: letterOut 0.8s forwards;
+        animation-delay: calc(var(--index, 0) * 0.08s);
+      }
+    }
+
+    &.visible.animating + .word .letter {
+      animation: letterIn 0.8s forwards;
+      animation-delay: calc((var(--index, 0) * 0.08s) + 0.8s);
+    }
+  }
+
+  .letter {
+    display: inline-block;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.8s, opacity 0.8s;
+  }
+}
