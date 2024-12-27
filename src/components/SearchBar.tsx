@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         </select>
         <input
           type='text'
-          className='form-control'
+          className='form-control border-start'
           placeholder='Search albums...'
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
@@ -35,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           className='btn btn-primary'
           type='submit'
           disabled={!searchTerm.trim()}>
-          Search
+          <i className='bi bi-search'></i>
         </button>
       </div>
     </form>
