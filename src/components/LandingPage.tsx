@@ -65,26 +65,36 @@ const LandingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
   const [filteredAlbums, setFilteredAlbums] = useState<Album[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const { term, criteria, page } = getUrlParams();
 
     const fetchAndFilterAlbums = async (): Promise<void> => {
-      const response = await fetch(
-        'https://itunes.apple.com/us/rss/topalbums/limit=100/json',
-      );
-      const data: ApiResponse = await response.json();
-      const albumData = data.feed.entry.map(album => ({
-        title: album['im:name'].label,
-        artist: album['im:artist'].label,
-        cover: album['im:image'][2].label,
-        releaseDate: album['im:releaseDate'].attributes.label,
-        genre: album['category'].attributes.label,
-      }));
+      try {
+        const response = await fetch(
+          'https://itunes.apple.com/us/rss/topalbums/limit=100/json',
+        );
+        const data: ApiResponse = await response.json();
+        const albumData = data.feed.entry.map(album => ({
+          title: album['im:name'].label,
+          artist: album['im:artist'].label,
+          cover: album['im:image'][2].label,
+          releaseDate: album['im:releaseDate'].attributes.label,
+          genre: album['category'].attributes.label,
+        }));
 
-      setAlbums(albumData);
-      setFilteredAlbums(filterAlbums(albumData, term, criteria));
-      setCurrentPage(page);
+        setAlbums(albumData);
+        setFilteredAlbums(filterAlbums(albumData, term, criteria));
+        setCurrentPage(page);
+      } catch (error) {
+        if (!navigator.onLine) {
+          setError('Please check your internet connection and try again.');
+        } else if (error instanceof TypeError) {
+          setError('Unable to load albums. Please try again later.');
+        }
+        console.error('Fetch error:', error);
+      }
     };
 
     fetchAndFilterAlbums();
@@ -134,17 +144,25 @@ const LandingPage = () => {
 
   return (
     <div className='landing-page'>
-      <Header onSearch={handleSearch} onTitleClick={handleTitleClick} />
-      <RotatingText />
-      <AlbumList
-        albums={paginatedAlbums}
-        selectedAlbum={selectedAlbum}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onAlbumClick={setSelectedAlbum}
-        onPageClick={handlePageClick}
-        onCloseModal={() => setSelectedAlbum(null)}
-      />
+      {error ? (
+        <div className='error-container'>
+          <p>{error}</p>
+        </div>
+      ) : (
+        <>
+          <Header onSearch={handleSearch} onTitleClick={handleTitleClick} />
+          <RotatingText />
+          <AlbumList
+            albums={paginatedAlbums}
+            selectedAlbum={selectedAlbum}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onAlbumClick={setSelectedAlbum}
+            onPageClick={handlePageClick}
+            onCloseModal={() => setSelectedAlbum(null)}
+          />
+        </>
+      )}
     </div>
   );
 };
