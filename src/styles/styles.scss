@@ -1,0 +1,23 @@
+@import 'bootstrap/scss/bootstrap';
+@import '/src/styles/header';
+@import '/src/styles/rotating-text';
+@import '/src/styles/animations';
+@import '/src/styles/album-card';
+@import '/src/styles/album-details-modal';
+@import '/src/styles/pagination';
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Avenir';
+}
+
+.album-content-section {
+  max-width: 80%;
+  position: relative;
+  padding-top: 2rem;
+  margin: auto;
+}
