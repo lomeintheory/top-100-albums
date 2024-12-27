@@ -26,7 +26,6 @@ const fetchTracklist = async (
     )}&entity=song&limit=50`,
   );
   const data: SearchApiResponse = await response.json();
-  console.log('trackJSON: ', data);
   return data.results.map((track: Track) => ({
     trackNumber: track.trackNumber,
     trackName: track.trackName,
@@ -51,7 +50,6 @@ const AlbumDetailsModal: React.FC<AlbumDetailsModalProps> = ({
           (a, b) => a.trackNumber - b.trackNumber,
         );
         setTrackList(sortedTracks);
-        console.log('tracksDetails: ', tracks);
       } catch (error) {
         console.error('Error fetching tracklist: ', error);
       }

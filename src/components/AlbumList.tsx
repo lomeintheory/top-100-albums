@@ -24,14 +24,20 @@ const AlbumList = ({
   onCloseModal,
 }: AlbumListProps) => {
   return (
-    <div className='album-content-section'>
-      <div className='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4'>
-        {albums.map((album, index) => (
-          <div className='col-md-3' key={index}>
-            <AlbumCard album={album} onAlbumClick={onAlbumClick} />
-          </div>
-        ))}
-      </div>
+    <div className='album-content-section my-4'>
+      {albums.length === 0 ? (
+        <div className='text-center my-5'>
+          <h3>Sorry! No albums were found for your search.</h3>
+        </div>
+      ) : (
+        <div className='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4'>
+          {albums.map((album, index) => (
+            <div className='col-md-3' key={index}>
+              <AlbumCard album={album} onAlbumClick={onAlbumClick} />
+            </div>
+          ))}
+        </div>
+      )}
       {selectedAlbum && (
         <AlbumDetailsModal album={selectedAlbum} onClosePopup={onCloseModal} />
       )}
