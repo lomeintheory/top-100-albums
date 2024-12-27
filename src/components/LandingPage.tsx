@@ -69,7 +69,6 @@ const LandingPage = () => {
   useEffect(() => {
     const { term, criteria, page } = getUrlParams();
 
-    // combining fetch and filter so app state is synchronized with URL params on initial load
     const fetchAndFilterAlbums = async (): Promise<void> => {
       const response = await fetch(
         'https://itunes.apple.com/us/rss/topalbums/limit=100/json',
@@ -91,7 +90,6 @@ const LandingPage = () => {
     fetchAndFilterAlbums();
   }, []);
 
-  // properly updates state when user navigates back and forward in browser
   useEffect(() => {
     const handlePopState = () => {
       const { term, criteria, page } = getUrlParams();
@@ -109,7 +107,6 @@ const LandingPage = () => {
     return filteredAlbums.slice(startIndex, startIndex + 8);
   }, [filteredAlbums, currentPage]);
 
-  // updates URL query params and album display based on search terms and criteria
   const handleSearch = (searchTerm: string, searchCriteria: string) => {
     if (searchTerm) {
       updateUrlParams({
